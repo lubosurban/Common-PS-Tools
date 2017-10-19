@@ -38,7 +38,7 @@ function Clear-DirectorySubTree
             {
                 $allItemsRemoved = $false
             }
-            elseif (!(Remove-ApplicationFiles -directory $item.FullName -excludedDirectories $excludedDirectories -excludedFiles $excludedFiles))
+            elseif (!(Clear-DirectorySubTree -directory $item.FullName -excludedDirectories $excludedDirectories -excludedFiles $excludedFiles))
             {
                 $allItemsRemoved = $false
             }

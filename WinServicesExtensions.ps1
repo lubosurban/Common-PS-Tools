@@ -13,16 +13,20 @@ function New-ServiceIfNotExists
     (
         [parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
-        [String] $serviceName,
+        [String]
+        $serviceName,
         [parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
-        [String] $serviceExecutable,
+        [String]
+        $serviceExecutable,
         [parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
-        [String] $serviceDisplayName,
+        [String]
+        $serviceDisplayName,
         [Parameter(Mandatory=$false)]
         [ValidateNotNull()]
-        [System.Management.Automation.PSCredential] $credential = [System.Management.Automation.PSCredential]::Empty
+        [System.Management.Automation.PSCredential]
+        $credential = [System.Management.Automation.PSCredential]::Empty
     )
 
     # Local variables declaration
@@ -68,7 +72,8 @@ function Remove-ServiceIfExists
     (
         [parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
-        [String] $serviceName
+        [String]
+        $serviceName
     )
 
     # Deleting service if exists

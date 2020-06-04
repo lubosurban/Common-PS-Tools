@@ -25,8 +25,11 @@ function New-WebAppPoolIfNotExists
         [ValidateSet("Classic", "Integrated")]
         [String] $managedPipelineMode,
         [Parameter(Mandatory=$false)]
+        [Boolean] $loadUserProfile = $false,
+        [Parameter(Mandatory=$false)]
         [ValidateNotNull()]
-        [System.Management.Automation.PSCredential] $credential = [System.Management.Automation.PSCredential]::Empty
+        [System.Management.Automation.PSCredential]
+        $credential = [System.Management.Automation.PSCredential]::Empty
     )
 
     $poolCreated = $false
@@ -60,6 +63,7 @@ function New-WebAppPoolIfNotExists
             Set-ItemProperty -Path "IIS:\AppPools\$appPoolName" -Name "ProcessModel.identityType" -value 3
             Set-ItemProperty -Path "IIS:\AppPools\$appPoolName" -Name "ProcessModel.userName" -value $credential.UserName
             Set-ItemProperty -Path "IIS:\AppPools\$appPoolName" -Name "ProcessModel.password" -value $credential.GetNetworkCredential().Password
+            Set-ItemProperty -Path "IIS:\AppPools\$appPoolName" -Name "ProcessModel.loadUserProfile" -value $loadUserProfile
         }
 
         $poolCreated = $true

@@ -55,7 +55,7 @@ function Read-HostList
 
     do
     {
-        $value = Read-HostDef -Prompt $prompt -DefaultValue $defaultValue
+        $value = Read-HostDefVal -Prompt $prompt -DefaultValue $defaultValue
     } while($allowedValues -notcontains $value)
 
     return($value)

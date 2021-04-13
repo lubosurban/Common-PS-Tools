@@ -15,15 +15,28 @@ function Read-HostDefVal
         [ValidateNotNullOrEmpty()]
         [String] $prompt,
         [String] $defaultValue = "",
-        [Switch] $isMandatory = $false
+        [Switch] $isMandatory = $false,
+        [ValidateSet("Default", "Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", `
+        "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "White", "Yellow")]
+        [String] $color
     )
 
     $promptMsg = "$prompt"
     if($defaultValue) { $promptMsg += " [$defaultValue]" }
+    $promptMsg += ": "
 
     do
     {
-        $value = Read-Host -Prompt $promptMsg
+        if($color)
+        {
+            Write-Host $promptMsg -ForegroundColor $color -NoNewline
+        }
+        else
+        {
+            Write-Host $promptMsg -NoNewline
+        }
+
+        $value = Read-Host
         $trimmedValue = $value.Trim()
 
         if((!$trimmedValue) -and ($defaultValue))
@@ -50,12 +63,22 @@ function Read-HostList
         [parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [String[]] $allowedValues,
-        [String] $defaultValue = ""
+        [String] $defaultValue = "",
+        [ValidateSet("Default", "Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", `
+        "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "White", "Yellow")]
+        [String] $color
     )
 
     do
     {
-        $value = Read-HostDefVal -Prompt $prompt -DefaultValue $defaultValue
+        if($color)
+        {
+            $value = Read-HostDefVal -Prompt $prompt -DefaultValue $defaultValue -color $color
+        }
+        else
+        {
+            $value = Read-HostDefVal -Prompt $prompt -DefaultValue $defaultValue
+        }
     } while($allowedValues -notcontains $value)
 
     return($value)

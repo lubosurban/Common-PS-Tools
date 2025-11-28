@@ -5,26 +5,28 @@
 # =============================================
 
 # ---------------------------------------------
-# Function: Import-SQLPSModule
+# Function: Import-SqlServerModule
 # ---------------------------------------------
-function Import-SQLPSModule
+function Import-SqlServerModule
 {
-    # Loading SQL server snapin (valid only for SQL Server 2008 R2)
-    Add-PSSnapIn SQLServerCmdletSnapin100 -ErrorAction SilentlyContinue
-
-    # Loading SQL server module, in case snapin wasn`t loaded (valid for SQL Server 2012 and above)
-    if (!(Get-Command Invoke-Sqlcmd -ErrorAction SilentlyContinue))
+    # Checks if the SqlServer module is available
+    if (Get-Module -ListAvailable -Name SqlServer)
     {
-        # Specify the DisableNameChecking parameter if you want to suppress the warning about Encode-Sqlname and Decode-Sqlname.
-        # https://msdn.microsoft.com/en-us/library/hh231286.aspx
-        Import-Module sqlps -DisableNameChecking
+        # Module found, proceed with import
+        Import-Module SqlServer -ErrorAction Stop
+    }
+    else
+    {
+        # Module not found, the script cannot continue
+        Write-Error "Modul `"SqlServer`" nie je nainštalovaný. Nainštalujte ho pomocou: Install-Module SqlServer"
+        throw "Modul `"SqlServer`" nie je nainštalovaný"
     }
 }
 
 # ---------------------------------------------
-# Function: Invoke-SQLQuery
+# Function: Invoke-SqlQuery
 # ---------------------------------------------
-function Invoke-SQLQuery
+function Invoke-SqlQuery
 {
     Param
     (
@@ -52,7 +54,7 @@ function Invoke-SQLQuery
 
     if ($queryTimeout)
     {
-        $moreCmdParameters.Add("Querytimeout", $queryTimeout)
+        $moreCmdParameters.Add("QueryTimeout", $queryTimeout)
     }
 
     if ($userName)
@@ -61,13 +63,13 @@ function Invoke-SQLQuery
         $moreCmdParameters.Add("Password", $userPassword)
     }
 
-    return Invoke-Sqlcmd -Query "$query" -ServerInstance "$serverInstance" -Database "$database" -ErrorAction Stop @moreCmdParameters
+    return Invoke-Sqlcmd -Query $query -ServerInstance $serverInstance -Database $database -ErrorAction Stop @moreCmdParameters
 }
 
 # ---------------------------------------------
-# Function: Invoke-SQLFile
+# Function: Invoke-SqlFile
 # ---------------------------------------------
-function Invoke-SQLFile
+function Invoke-SqlFile
 {
     Param
     (
@@ -95,7 +97,7 @@ function Invoke-SQLFile
 
     if ($queryTimeout)
     {
-        $moreCmdParameters.Add("Querytimeout", $queryTimeout)
+        $moreCmdParameters.Add("QueryTimeout", $queryTimeout)
     }
 
     if ($userName)
@@ -105,13 +107,13 @@ function Invoke-SQLFile
     }
 
 
-    Invoke-Sqlcmd -InputFile "$inputFile" -ServerInstance "$serverInstance" -Database "$database" -ErrorAction Stop @moreCmdParameters
+    Invoke-Sqlcmd -InputFile $inputFile -ServerInstance $serverInstance -Database $database -ErrorAction Stop @moreCmdParameters
 }
 
 # ---------------------------------------------
-# Function: Invoke-SQLFileAtServerLevel
+# Function: Invoke-SqlFileAtServerLevel
 # ---------------------------------------------
-function Invoke-SQLFileAtServerLevel
+function Invoke-SqlFileAtServerLevel
 {
     Param
     (
@@ -136,7 +138,7 @@ function Invoke-SQLFileAtServerLevel
 
     if ($queryTimeout)
     {
-        $moreCmdParameters.Add("Querytimeout", $queryTimeout)
+        $moreCmdParameters.Add("QueryTimeout", $queryTimeout)
     }
 
     if ($userName)
@@ -146,5 +148,5 @@ function Invoke-SQLFileAtServerLevel
     }
 
 
-    Invoke-Sqlcmd -InputFile "$inputFile" -ServerInstance "$serverInstance" -ErrorAction Stop @moreCmdParameters
+    Invoke-Sqlcmd -InputFile $inputFile -ServerInstance $serverInstance -ErrorAction Stop @moreCmdParameters
 }

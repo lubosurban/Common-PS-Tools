@@ -18,8 +18,8 @@ function Import-SqlServerModule
     else
     {
         # Module not found, the script cannot continue
-        Write-Error "Modul `"SqlServer`" nie je nainštalovaný. Nainštalujte ho pomocou: Install-Module SqlServer"
-        throw "Modul `"SqlServer`" nie je nainštalovaný"
+        Write-Error "Powershell modul `"SqlServer`" nie je nainštalovaný. Nainštalujte ho pomocou: Install-Module SqlServer -Scope AllUsers -AllowClobber"
+        throw "Powershell modul `"SqlServer`" nie je nainštalovaný"
     }
 }
 
@@ -63,7 +63,7 @@ function Invoke-SqlQuery
         $moreCmdParameters.Add("Password", $userPassword)
     }
 
-    return Invoke-Sqlcmd -Query $query -ServerInstance $serverInstance -Database $database -ErrorAction Stop @moreCmdParameters
+    return Invoke-Sqlcmd -Query $query -ServerInstance $serverInstance -Database $database -TrustServerCertificate -ErrorAction Stop @moreCmdParameters
 }
 
 # ---------------------------------------------
@@ -107,7 +107,7 @@ function Invoke-SqlFile
     }
 
 
-    Invoke-Sqlcmd -InputFile $inputFile -ServerInstance $serverInstance -Database $database -ErrorAction Stop @moreCmdParameters
+    Invoke-Sqlcmd -InputFile $inputFile -ServerInstance $serverInstance -Database $database -TrustServerCertificate -ErrorAction Stop @moreCmdParameters
 }
 
 # ---------------------------------------------
@@ -148,5 +148,5 @@ function Invoke-SqlFileAtServerLevel
     }
 
 
-    Invoke-Sqlcmd -InputFile $inputFile -ServerInstance $serverInstance -ErrorAction Stop @moreCmdParameters
+    Invoke-Sqlcmd -InputFile $inputFile -ServerInstance $serverInstance -TrustServerCertificate -ErrorAction Stop @moreCmdParameters
 }

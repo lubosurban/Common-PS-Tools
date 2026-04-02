@@ -60,7 +60,7 @@ function New-ServiceIfNotExists
         }
     }
 
-    return ($result)
+    return ($serviceCreated)
 }
 
 # ---------------------------------------------
